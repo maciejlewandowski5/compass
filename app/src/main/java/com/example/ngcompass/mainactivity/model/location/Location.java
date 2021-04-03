@@ -9,6 +9,7 @@ public interface Location extends Serializable {
     float bearingTo(Location location);
     double getLatitude();
     double getLongitude();
+    float distanceTo(Location location);
 
 }
 

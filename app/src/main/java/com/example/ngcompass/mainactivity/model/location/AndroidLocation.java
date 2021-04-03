@@ -29,12 +29,25 @@ public class AndroidLocation implements Location, Serializable {
 
     @Override
     public float bearingTo(Location location) {
+        android.location.Location bearingArgumentLocation = prepareOriginalAndroidLocation(location);
+
+        return this.mLocation.bearingTo(bearingArgumentLocation);
+
+
+    }
+
+    private android.location.Location prepareOriginalAndroidLocation(Location location) {
         android.location.Location bearingArgumentLocation = new android.location.Location("");
 
         bearingArgumentLocation.setLatitude(location.getLatitude());
         bearingArgumentLocation.setLongitude(location.getLongitude());
+        return bearingArgumentLocation;
+    }
 
-        return this.mLocation.bearingTo(bearingArgumentLocation);
+    @Override
+    public float distanceTo(Location location) {
+        android.location.Location distanceArgumentLocation = prepareOriginalAndroidLocation(location);
+        return mLocation.distanceTo(distanceArgumentLocation);
     }
 
     @Override

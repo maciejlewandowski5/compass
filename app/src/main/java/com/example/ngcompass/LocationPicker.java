@@ -3,6 +3,7 @@ package com.example.ngcompass;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -68,10 +69,23 @@ public class LocationPicker extends FragmentActivity implements OnMapReadyCallba
     }
 
     public void locationPickConfirmationClicked(View view) {
+        saveToIntent();
+        saveToStorage();
+        onBackPressed();
+    }
+
+    private void saveToIntent() {
         Intent data = new Intent();
         data.putExtra("latitude", marker.getPosition().latitude);
         data.putExtra("longitude", marker.getPosition().longitude);
         setResult(RESULT_OK, data);
-        onBackPressed();
+    }
+
+    private void saveToStorage() {
+        SharedPreferences sp = getSharedPreferences("destination",MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
+        e.putLong("latitude",Double.doubleToRawLongBits(marker.getPosition().latitude));
+        e.putLong("longitude",Double.doubleToRawLongBits(marker.getPosition().longitude));
+        e.apply();
     }
 }

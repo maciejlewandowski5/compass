@@ -56,8 +56,8 @@ public class CompassPresenter {
     public void onPause() {
     }
 
-    public void setScreenLandscapeMode() {
-        screenOrientationCorrection = -90;
+    public void setScrennOrientationCorrection(int correctionAngle) {
+        screenOrientationCorrection = correctionAngle;
     }
 
     public void setScreenPortraitMode() {

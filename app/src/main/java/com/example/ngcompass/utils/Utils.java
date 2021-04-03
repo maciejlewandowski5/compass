@@ -15,14 +15,23 @@ public class Utils {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
-    public static void toastMessage(Context context,String message){
+    public static void toastMessage(Context context, String message) {
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         toast.show();
     }
 
     @SuppressLint("DefaultLocale") // formatting GPS signal
-    public static String formatLocation(double latOrLang){
-        return String.format("%.6f",latOrLang);
+    public static String formatLocation(double latOrLang) {
+        return String.format("%.6f", latOrLang);
+
+    }
+
+    public static String formatDistance(double distanceInMeters) {
+        if (distanceInMeters < 1000) {
+            return String.format("%.2f", distanceInMeters) + " m";
+        } else {
+            return String.format("%.2f", distanceInMeters / 1000d) + " km";
+        }
 
     }
 }
