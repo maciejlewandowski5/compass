@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_small">6dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_big">24dp</dimen>
+    <dimen name="margin_huge">32dp</dimen>
+    <dimen name="text_line_gap_small">22dp</dimen>
+    <dimen name="text_line_gap_big">50dp</dimen>
+    <dimen name="button_big">150dp</dimen>
+    <dimen name="button_small">50dp</dimen>
+    <dimen name="button_medium">75dp</dimen>
+    <dimen name="text_big">20sp</dimen>
+    <dimen name="text_medium">14sp</dimen>
+    <dimen name="text_small">11sp</dimen>
+</resources>
