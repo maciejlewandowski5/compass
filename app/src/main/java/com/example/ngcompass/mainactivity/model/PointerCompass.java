@@ -34,7 +34,7 @@ public class PointerCompass extends Compass{
     public void setCurrentAzimuth(float currentAzimuth) {
 
         float bearing = currentPosition.bearingTo(targetLocation);
-        float targetAngle = -(bearing - currentAzimuth);
+        float targetAngle = (bearing - currentAzimuth);
 
         super.setCurrentAzimuth(targetAngle);
     }
