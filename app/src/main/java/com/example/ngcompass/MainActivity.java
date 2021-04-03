@@ -1,5 +1,6 @@
 package com.example.ngcompass;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -157,6 +158,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Location destination = gpsCompassPresenter.getDestination();
+
+        outState.putDouble("longitude",destination.getLongitude());
+        outState.putDouble("latitude",destination.getLatitude());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Location destination
+    }
 
     private void initializeLocationListener() {
         pointingToLocationTitle.setText(getString(R.string.waiting_for_gsp_signal));

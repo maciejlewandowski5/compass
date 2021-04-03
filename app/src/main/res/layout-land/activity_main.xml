@@ -17,7 +17,6 @@
         android:text="@string/waiting_for_gsp_signal"
         android:textAlignment="center"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,11 +24,11 @@
         android:id="@+id/compass_back_face"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/margin_huge"
+        android:layout_margin="@dimen/margin_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gps_coordinates_container"
+        app:layout_constraintStart_toEndOf="@+id/gps_coordinates_container"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back_comapss_face" />
 
     <ImageView
@@ -67,10 +66,10 @@
         android:id="@+id/gps_coordinates_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="invisible"
         android:layout_marginTop="@dimen/margin_medium"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pointing_to_location_title">
 
