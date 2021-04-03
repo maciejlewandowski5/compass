@@ -18,4 +18,9 @@ public class Utils {
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         toast.show();
     }
+
+    public static String formatLocation(double latOrLang){
+        return String.format("##.######",latOrLang);
+
+    }
 }

@@ -26,5 +26,9 @@ public class PointerCompassPresenter extends CompassPresenter {
         ((PointerCompass)compass).setTargetLocation(destination);
     }
 
+    public Location getDestination(){
+        return ((PointerCompass)compass).getTargetLocation();
+    }
+
 
 }

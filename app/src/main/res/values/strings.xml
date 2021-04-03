@@ -5,5 +5,8 @@
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
     <string name="sensor_not_supported">Your device do not support accelerometer or magnetometer, can not use compass</string>
+    <string name="please_enable_gps">Please enable GPS location</string>
+    <string name="enable_gps_to_navigate">Enable localisation, to navigate</string>
+    <string name="waiting_for_gsp_signal">Waiting for GSP signal</string>
 
 </resources>

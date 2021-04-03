@@ -14,6 +14,10 @@ public class PointerCompass extends Compass{
         this.currentPosition = currentPosition;
     }
 
+    public Location getTargetLocation() {
+        return targetLocation;
+    }
+
     public void setTargetLocation(Location targetLocation) {
         this.targetLocation = targetLocation;
     }
