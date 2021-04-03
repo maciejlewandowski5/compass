@@ -1,9 +1,11 @@
 package com.example.ngcompass;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.ngcompass.mainactivity.MainActivityView;
+
+public class MainActivity extends AppCompatActivity implements MainActivityView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
