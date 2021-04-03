@@ -1,6 +1,8 @@
 package com.example.ngcompass.utils;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.widget.Toast;
 
 public class Utils {
 
@@ -10,5 +12,10 @@ public class Utils {
 
     public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static void toastMessage(Context context,String message){
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

@@ -4,4 +4,6 @@
     <string name="pointing_to_location">Pointing to location:</string>
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
+    <string name="sensor_not_supported">Your device do not support accelerometer or magnetometer, can not use compass</string>
+
 </resources>

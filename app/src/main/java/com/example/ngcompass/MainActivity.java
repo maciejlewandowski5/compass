@@ -7,6 +7,9 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,9 +26,10 @@ import com.example.ngcompass.mainactivity.model.PointerCompass;
 import com.example.ngcompass.mainactivity.model.location.AndroidLocation;
 import com.example.ngcompass.mainactivity.presenter.CompassPresenter;
 import com.example.ngcompass.mainactivity.presenter.PointerCompassPresenter;
+import com.example.ngcompass.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MainActivity extends AppCompatActivity implements MainActivityView, LocationListener {
+public class MainActivity extends AppCompatActivity implements MainActivityView, LocationListener, SensorEventListener {
 
     private static final int MIN_TIME_LOCATION_UPDATE_MS = 10000;
     private static final int MIN_DIST_LOCATION_UPDATE_MS = 0;
@@ -75,13 +79,34 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     protected void onResume() {
         regularCompassPresenter.onResume();
         gpsCompassPresenter.onResume();
+        registerSensorsListeners();
         super.onResume();
+    }
+
+    private void registerSensorsListeners() {
+        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        startSensorListener(accelerometer);
+        startSensorListener(magnetometer);
+
+    }
+
+    private void startSensorListener(Sensor sensor) {
+        if(sensor!=null){
+            sensorManager.registerListener(
+                    this,
+                    sensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+        }else{
+            Utils.toastMessage(this, getString(R.string.sensor_not_supported));
+        }
     }
 
     @Override
     protected void onPause() {
         regularCompassPresenter.onPause();
         gpsCompassPresenter.onPause();
+        sensorManager.unregisterListener(this);
         super.onPause();
     }
 
@@ -131,6 +156,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         coordinatesContainer.setVisibility(View.INVISIBLE);
         pointingToLocationTitle.setVisibility(View.INVISIBLE);
         locationPickerButton.setClickable(false);
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 }
