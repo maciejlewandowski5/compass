@@ -9,3 +9,4 @@ public interface Location {
     double getLongitude();
 
 }
+

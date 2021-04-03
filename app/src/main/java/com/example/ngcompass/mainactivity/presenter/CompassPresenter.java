@@ -7,16 +7,32 @@ import com.example.ngcompass.mainactivity.model.RotationModel;
 
 public class CompassPresenter {
 
-    private RotationModel rotationModel;
+    private SensorsPresenter sensorsPresenter;
     protected Compass compass;
 
-    public CompassPresenter(Compass compass) {
-        rotationModel = new RotationModel();
+    public CompassPresenter(SensorsPresenter sensorsPresenter) {
+        this.sensorsPresenter = sensorsPresenter;
+        this.compass = new Compass();
+    }
 
+    protected CompassPresenter(SensorsPresenter sensorsPresenter, Compass compass) {
+        this.sensorsPresenter = sensorsPresenter;
+        this.compass = compass;
+    }
+
+    public float getLastAzimuth(){
+        return compass.getLastAzimuth();
+    }
+    public float getCurrentAzimuth(){
+        return compass.getCurrentAzimuth();
     }
 
     public void lockCompass(){
         compass.setLocked(true);
+    }
+
+    public void unlockCompass(){
+        compass.setLocked(false);
     }
 
     public boolean isCompassLocked(){
@@ -25,30 +41,9 @@ public class CompassPresenter {
 
     public void updateCompass() {
         if(!isCompassLocked()) {
-
-            float azimuth = calculateAzimuth();
-            compass.setCurrentAzimuth(azimuth);
-
+            compass.setCurrentAzimuth(sensorsPresenter.calculateAzimuth());
         }else throw new IllegalStateException(
                 "Compass is in locked mode, to change azimuth first unlock it");
-    }
-
-    private float calculateAzimuth() {
-        return -(float)
-                Math.toDegrees(rotationModel.orientationAngles[0])
-                + rotationModel.screenOrientationCorrection;
-    }
-
-    public void updateRotationModel(float[] accelerometerReading, float[] magnetometerReading) {
-        SensorManager.getRotationMatrix(
-                rotationModel.rotationMatrix,
-                null,
-                accelerometerReading,
-                magnetometerReading);
-
-        SensorManager.getOrientation(
-                rotationModel.rotationMatrix,
-                rotationModel.orientationAngles);
     }
 
     public void onResume() {

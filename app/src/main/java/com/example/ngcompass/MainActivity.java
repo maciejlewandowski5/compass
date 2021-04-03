@@ -16,16 +16,19 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.ngcompass.animations.CompassRotationAnimation;
 import com.example.ngcompass.mainactivity.MainActivityView;
-import com.example.ngcompass.mainactivity.model.Compass;
-import com.example.ngcompass.mainactivity.model.PointerCompass;
 import com.example.ngcompass.mainactivity.model.location.AndroidLocation;
 import com.example.ngcompass.mainactivity.presenter.CompassPresenter;
 import com.example.ngcompass.mainactivity.presenter.PointerCompassPresenter;
+import com.example.ngcompass.mainactivity.presenter.SensorsPresenter;
 import com.example.ngcompass.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
 
     private CompassPresenter regularCompassPresenter;
     private PointerCompassPresenter gpsCompassPresenter;
+    private SensorsPresenter sensorsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +69,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
     private void initializeCompassPresenters() {
-        regularCompassPresenter = new CompassPresenter(new Compass());
+        sensorsPresenter = new SensorsPresenter();
+        regularCompassPresenter = new CompassPresenter(sensorsPresenter);
+
         AndroidLocation destination = new AndroidLocation();
         AndroidLocation currentLocation = new AndroidLocation();
         destination.setLatitude(0);
         destination.setLongitude(0);
         currentLocation.setLongitude(50);
         currentLocation.setLatitude(50);
-        gpsCompassPresenter = new PointerCompassPresenter(new PointerCompass(destination,currentLocation));
+
+        gpsCompassPresenter = new PointerCompassPresenter(
+                sensorsPresenter,
+                destination,
+                currentLocation);
     }
 
     @Override
@@ -92,12 +102,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
     private void startSensorListener(Sensor sensor) {
-        if(sensor!=null){
+        if (sensor != null) {
             sensorManager.registerListener(
                     this,
                     sensor,
                     SensorManager.SENSOR_DELAY_NORMAL);
-        }else{
+        } else {
             Utils.toastMessage(this, getString(R.string.sensor_not_supported));
         }
     }
@@ -133,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 MIN_TIME_LOCATION_UPDATE_MS,
-                MIN_DIST_LOCATION_UPDATE_MS,this);
+                MIN_DIST_LOCATION_UPDATE_MS, this);
     }
 
 
@@ -161,6 +171,42 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        updateAccMagReadings(event, event.sensor.getType());
+
+        if (isAnyCompassPresenterUnlocked()) {
+            sensorsPresenter.updateRotationModel();
+        }
+
+        if (!regularCompassPresenter.isCompassLocked()) {
+            regularCompassPresenter.updateCompass();
+
+            CompassRotationAnimation animation = new
+                    CompassRotationAnimation(
+                    regularCompassPresenter,
+                    compassFace);
+            animation.setOnAnimationStart(() -> {
+                regularCompassPresenter.lockCompass();
+            });
+            animation.setOnAnimationEnd(() -> {
+                regularCompassPresenter.unlockCompass();
+            });
+
+            animation.startAnimation();
+        }
+        if()
+
+    }
+
+    private boolean isAnyCompassPresenterUnlocked() {
+        return !regularCompassPresenter.isCompassLocked() || !gpsCompassPresenter.isCompassLocked();
+    }
+
+    private void updateAccMagReadings(SensorEvent event, int sensorType) {
+        if (sensorType == Sensor.TYPE_ACCELEROMETER) {
+            sensorsPresenter.updateAccelerometerReadings(event.values.clone());
+        } else if (sensorType == Sensor.TYPE_MAGNETIC_FIELD) {
+            sensorsPresenter.updateMagnetometerReadings(event.values.clone());
+        }
 
     }
 

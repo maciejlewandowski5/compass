@@ -7,8 +7,15 @@ import com.example.ngcompass.mainactivity.model.location.Location;
 
 public class PointerCompassPresenter extends CompassPresenter {
 
-    public PointerCompassPresenter(PointerCompass compass) {
-        super(compass);
+    public PointerCompassPresenter(
+            SensorsPresenter sensorsPresenter,
+            Location destination,
+            Location startingPosition) {
+
+        super(
+                sensorsPresenter,
+                new PointerCompass(destination, startingPosition));
+
     }
 
     public void updateCurrentPosition(Location currentPosition){
