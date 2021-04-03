@@ -1,20 +1,17 @@
 package com.example.ngcompass.mainactivity.model;
 
-import android.location.Location;
+import com.example.ngcompass.mainactivity.model.location.Location;
 
 public class PointerCompass extends Compass{
+
 
     Location targetLocation;
     Location currentPosition;
 
-    public PointerCompass() {
-        targetLocation = new Location("");
-        targetLocation.setLongitude(0);
-        targetLocation.setLatitude(0);
 
-        currentPosition = new Location("");
-        currentPosition.setLongitude(50);
-        currentPosition.setLatitude(50);
+    public PointerCompass(Location targetLocation, Location currentPosition) {
+        this.targetLocation = targetLocation;
+        this.currentPosition = currentPosition;
     }
 
     public void setTargetLocation(Location targetLocation) {

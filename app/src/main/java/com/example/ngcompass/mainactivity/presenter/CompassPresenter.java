@@ -8,7 +8,7 @@ import com.example.ngcompass.mainactivity.model.RotationModel;
 public class CompassPresenter {
 
     private RotationModel rotationModel;
-    private Compass compass;
+    protected Compass compass;
 
     public CompassPresenter(Compass compass) {
         rotationModel = new RotationModel();
@@ -49,5 +49,11 @@ public class CompassPresenter {
         SensorManager.getOrientation(
                 rotationModel.rotationMatrix,
                 rotationModel.orientationAngles);
+    }
+
+    public void onResume() {
+    }
+
+    public void onPause() {
     }
 }
