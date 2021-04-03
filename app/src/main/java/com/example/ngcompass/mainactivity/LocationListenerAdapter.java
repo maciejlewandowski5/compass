@@ -5,7 +5,9 @@ import android.location.LocationListener;
 
 import androidx.annotation.NonNull;
 
-public class LocationListenerAdapter implements LocationListener {
+import java.io.Serializable;
+
+public class LocationListenerAdapter implements LocationListener, Serializable {
 
     private boolean firstRead;
 
@@ -20,6 +22,10 @@ public class LocationListenerAdapter implements LocationListener {
 
     public boolean isFirstRead() {
         return firstRead;
+    }
+
+    public void setFirstRead(boolean firstRead) {
+        this.firstRead = firstRead;
     }
 
     public void setOnFirstLocationUpdate(OnFirstLocationUpdate onFirstLocationUpdate) {

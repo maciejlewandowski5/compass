@@ -1,6 +1,8 @@
 package com.example.ngcompass.mainactivity.model.location;
 
-public interface Location {
+import java.io.Serializable;
+
+public interface Location extends Serializable {
 
     void setLongitude(double longitude);
     void setLatitude(double latitude);

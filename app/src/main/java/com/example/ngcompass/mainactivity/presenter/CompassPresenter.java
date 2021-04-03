@@ -20,6 +20,7 @@ public class CompassPresenter {
     protected CompassPresenter(SensorsPresenter sensorsPresenter, Compass compass) {
         this.sensorsPresenter = sensorsPresenter;
         this.compass = compass;
+        screenOrientationCorrection =0;
     }
 
     public float getLastAzimuth() {

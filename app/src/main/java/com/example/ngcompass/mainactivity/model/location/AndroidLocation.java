@@ -1,6 +1,8 @@
 package com.example.ngcompass.mainactivity.model.location;
 
-public class AndroidLocation implements Location {
+import java.io.Serializable;
+
+public class AndroidLocation implements Location, Serializable {
 
     android.location.Location mLocation;
 

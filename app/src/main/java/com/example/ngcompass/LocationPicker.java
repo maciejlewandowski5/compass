@@ -30,10 +30,10 @@ public class LocationPicker extends FragmentActivity implements OnMapReadyCallba
 
 
         Intent intent = getIntent();
-        double longitude =intent.getDoubleExtra("longitude",0);
-        double latitude = intent.getDoubleExtra("latitude",0);
+        double longitude = intent.getDoubleExtra("longitude", 0);
+        double latitude = intent.getDoubleExtra("latitude", 0);
 
-        location = new LatLng(latitude,longitude);
+        location = new LatLng(latitude, longitude);
     }
 
 
@@ -51,7 +51,7 @@ public class LocationPicker extends FragmentActivity implements OnMapReadyCallba
     }
 
     private void setMarker(LatLng latLng) {
-        if(marker!=null) {
+        if (marker != null) {
             marker.remove();
         }
         MarkerOptions markerOptions = new MarkerOptions().
@@ -69,8 +69,8 @@ public class LocationPicker extends FragmentActivity implements OnMapReadyCallba
 
     public void locationPickConfirmationClicked(View view) {
         Intent data = new Intent();
-        data.putExtra("latitude",marker.getPosition().latitude);
-        data.putExtra("longitude",marker.getPosition().longitude);
+        data.putExtra("latitude", marker.getPosition().latitude);
+        data.putExtra("longitude", marker.getPosition().longitude);
         setResult(RESULT_OK, data);
         onBackPressed();
     }

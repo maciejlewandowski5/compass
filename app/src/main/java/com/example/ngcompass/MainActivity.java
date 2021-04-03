@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        locationListener = new LocationListenerAdapter();
+
     }
 
     private void initializePresenters() {
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         gpsCompassPresenter.onResume();
 
         initializeLocationListener();
+        System.out.println("onResume");
 
         requestLocationUpdates();
         registerSensorsListeners();
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
             regularCompassPresenter.updateCompass();
             prepareAndStartCompassAnimation(regularCompassPresenter, compassFace);
         }
-        if (!gpsCompassPresenter.isCompassLocked() && !locationListener.isFirstRead()) {
+        if (!gpsCompassPresenter.isCompassLocked() ) {
             gpsCompassPresenter.updateCompass();
             prepareAndStartCompassAnimation(gpsCompassPresenter, locationPointer);
         }
@@ -162,20 +163,46 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Location destination = gpsCompassPresenter.getDestination();
+        Location currentLocation = gpsCompassPresenter.getCurrentLocation();
+        outState.putDouble("DestinationLat", destination.getLatitude());
+        outState.putDouble("DestinationLon", destination.getLongitude());
+        outState.putSerializable("CurrentLocationLat", currentLocation.getLatitude());
+        outState.putSerializable("CurrentLocationLon", currentLocation.getLongitude());
+        outState.putSerializable("LLA", locationListener.isFirstRead());
 
-        outState.putDouble("longitude",destination.getLongitude());
-        outState.putDouble("latitude",destination.getLatitude());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Location destination
+        Location destination = new AndroidLocation();
+        Location currentLocation = new AndroidLocation();
+        destination.setLatitude(savedInstanceState.getDouble("DestinationLat"));
+        destination.setLongitude(savedInstanceState.getDouble("DestinationLon"));
+        currentLocation.setLongitude(savedInstanceState.getDouble("CurrentLocationLon"));
+        currentLocation.setLatitude(savedInstanceState.getDouble("CurrentLocationLat"));
+
+        gpsCompassPresenter.updateCurrentPosition(currentLocation);
+        gpsCompassPresenter.updateDestination(destination);
+
+        boolean isFirstRead = savedInstanceState.getBoolean("LLA");
+        locationListener = new LocationListenerAdapter();
+        locationListener.setFirstRead(isFirstRead);
+        registerLocationListenerAdapterListeners();
+        enablePointingToLocation();
+        System.out.println("RESTOOORED");
     }
 
     private void initializeLocationListener() {
         pointingToLocationTitle.setText(getString(R.string.waiting_for_gsp_signal));
 
+        if (locationListener == null) {
+            locationListener = new LocationListenerAdapter();
+            registerLocationListenerAdapterListeners();
+        }
+    }
+
+    private void registerLocationListenerAdapterListeners() {
         locationListener.setOnLocationChanged(location -> {
             gpsCompassPresenter.updateCurrentPosition(AndroidLocation.from(location));
             updateLocationTextViews();
