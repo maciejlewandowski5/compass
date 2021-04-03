@@ -4,6 +4,7 @@
     <dimen name="margin_medium">12dp</dimen>
     <dimen name="margin_big">24dp</dimen>
     <dimen name="margin_huge">32dp</dimen>
+    <dimen name="margin_very_huge">50dp</dimen>
     <dimen name="text_line_gap_small">22dp</dimen>
     <dimen name="text_line_gap_big">50dp</dimen>
     <dimen name="button_big">150dp</dimen>

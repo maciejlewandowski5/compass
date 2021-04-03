@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NGCompass</string>
     <string name="title_activity_location_picker">Map</string>
+    <string name="pointing_to_location">Pointing to location:</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
 </resources>

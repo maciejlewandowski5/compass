@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="header1">
+
+        <item name="android:textSize">
+            @dimen/text_big
+        </item>
+
+        <item name="android:textColor">
+            @color/on_white
+        </item>
+
+    </style>
+
+    <style name="small_text">
+
+        <item name="android:textSize">
+            @dimen/text_small
+        </item>
+
+        <item name="android:textColor">
+            @color/on_white
+        </item>
+
+    </style>
+
+    <style name="medium_text">
+
+        <item name="android:textSize">
+            @dimen/text_medium
+        </item>
+
+        <item name="android:textColor">
+            @color/on_white
+        </item>
+
+    </style>
+</resources>
