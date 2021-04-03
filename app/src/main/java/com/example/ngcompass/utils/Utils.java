@@ -1,5 +1,6 @@
 package com.example.ngcompass.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.widget.Toast;
@@ -19,8 +20,9 @@ public class Utils {
         toast.show();
     }
 
+    @SuppressLint("DefaultLocale") // formatting GPS signal
     public static String formatLocation(double latOrLang){
-        return String.format("##.######",latOrLang);
+        return String.format("%.6f",latOrLang);
 
     }
 }

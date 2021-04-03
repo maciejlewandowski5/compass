@@ -108,6 +108,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         super.onPause();
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        updateAccMagReadings(event, event.sensor.getType());
+        if (isAnyCompassPresenterUnlocked()) {
+            sensorsPresenter.updateRotationModel();
+        }
+        if (!regularCompassPresenter.isCompassLocked()) {
+            regularCompassPresenter.updateCompass();
+            prepareAndStartCompassAnimation(regularCompassPresenter, compassFace);
+        }
+        if (!gpsCompassPresenter.isCompassLocked() && !locationListener.isFirstRead()) {
+            gpsCompassPresenter.updateCompass();
+            prepareAndStartCompassAnimation(gpsCompassPresenter, locationPointer);
+        }
+
+    }
+
+
     private void initializeLocationListener() {
         locationListener.setOnLocationChanged(location -> {
             gpsCompassPresenter.updateCurrentPosition(AndroidLocation.from(location));
@@ -213,46 +231,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        updateAccMagReadings(event, event.sensor.getType());
 
-        if (isAnyCompassPresenterUnlocked()) {
-            sensorsPresenter.updateRotationModel();
-        }
+    private void prepareAndStartCompassAnimation(CompassPresenter gpsCompassPresenter, ImageView locationPointer) {
+        CompassRotationAnimation animation = new
+                CompassRotationAnimation(
+                gpsCompassPresenter,
+                locationPointer);
 
-        if (!regularCompassPresenter.isCompassLocked()) {
-            regularCompassPresenter.updateCompass();
-
-            CompassRotationAnimation animation = new
-                    CompassRotationAnimation(
-                    regularCompassPresenter,
-                    compassFace);
-            animation.setOnAnimationStart(() -> {
-                regularCompassPresenter.lockCompass();
-            });
-            animation.setOnAnimationEnd(() -> {
-                regularCompassPresenter.unlockCompass();
-            });
-
-            animation.startAnimation();
-        }
-        if (!gpsCompassPresenter.isCompassLocked() && !locationListener.isFirstRead()) {
-            gpsCompassPresenter.updateCompass();
-            CompassRotationAnimation animation = new
-                    CompassRotationAnimation(
-                    gpsCompassPresenter,
-                    locationPointer);
-            animation.setOnAnimationStart(() -> {
-                gpsCompassPresenter.lockCompass();
-            });
-            animation.setOnAnimationEnd(() -> {
-                gpsCompassPresenter.unlockCompass();
-            });
-
-            animation.startAnimation();
-        }
-
+        animation.setOnAnimationStart(gpsCompassPresenter::lockCompass);
+        animation.setOnAnimationEnd(gpsCompassPresenter::unlockCompass);
+        animation.startAnimation();
     }
 
     private boolean isAnyCompassPresenterUnlocked() {
