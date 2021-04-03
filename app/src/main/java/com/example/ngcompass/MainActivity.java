@@ -1,12 +1,15 @@
 package com.example.ngcompass;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     private static final int MIN_DIST_LOCATION_UPDATE_MS = 0;
     private static final int REQUEST_FINE_LOCATION_CODE = 1;
     private static final int REQUEST_COARSE_LOCATION_CODE = 2;
+    private final int PICK_LOCATION = 12;
 
     private ImageView compassFace;
     private ImageView locationPointer;
@@ -58,8 +62,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         setContentView(R.layout.activity_main);
 
         initializeViews();
-        initializeCompassPresenters();
+        initializePresenters();
         initializeServices();
+
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            regularCompassPresenter.setScreenLandscapeMode();
+            gpsCompassPresenter.setScreenLandscapeMode();
+        } else {
+            regularCompassPresenter.setScreenPortraitMode();
+            gpsCompassPresenter.setScreenPortraitMode();
+        }
     }
 
     private void initializeServices() {
@@ -69,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         locationListener = new LocationListenerAdapter();
     }
 
-    private void initializeCompassPresenters() {
+    private void initializePresenters() {
         sensorsPresenter = new SensorsPresenter();
         regularCompassPresenter = new CompassPresenter(sensorsPresenter);
 
@@ -109,6 +122,26 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_LOCATION) {
+            if (resultCode == RESULT_OK) {
+
+                Location location = new AndroidLocation();
+                location.setLatitude(data.getDoubleExtra("latitude", 0));
+                location.setLongitude(data.getDoubleExtra("longitude", 0));
+                gpsCompassPresenter.updateDestination(location);
+                if (!regularCompassPresenter.isCompassLocked()) {
+                    regularCompassPresenter.updateCompass();
+                    prepareAndStartCompassAnimation(regularCompassPresenter, compassFace);
+                }
+                ;
+
+            }
+        }
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         updateAccMagReadings(event, event.sensor.getType());
         if (isAnyCompassPresenterUnlocked()) {
@@ -122,11 +155,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
             gpsCompassPresenter.updateCompass();
             prepareAndStartCompassAnimation(gpsCompassPresenter, locationPointer);
         }
-
     }
 
 
     private void initializeLocationListener() {
+        pointingToLocationTitle.setText(getString(R.string.waiting_for_gsp_signal));
+
         locationListener.setOnLocationChanged(location -> {
             gpsCompassPresenter.updateCurrentPosition(AndroidLocation.from(location));
             updateLocationTextViews();
@@ -134,7 +168,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         });
         locationListener.setOnProviderDisabled(this::disablePointingToLocation);
 
-        locationListener.setOnProviderEnabled(this::enablePointingToLocation);
+        locationListener.setOnProviderEnabled(() -> {
+            pointingToLocationTitle.setText(getString(R.string.waiting_for_gsp_signal));
+        });
 
         locationListener.setOnFirstLocationUpdate(location -> {
             enablePointingToLocation();
@@ -186,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
 
-
     private void initializeViews() {
         compassFace = findViewById(R.id.compass_front_face);
         locationPointer = findViewById(R.id.location_pointer);
@@ -231,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
 
-
     private void prepareAndStartCompassAnimation(CompassPresenter gpsCompassPresenter, ImageView locationPointer) {
         CompassRotationAnimation animation = new
                 CompassRotationAnimation(
@@ -241,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         animation.setOnAnimationStart(gpsCompassPresenter::lockCompass);
         animation.setOnAnimationEnd(gpsCompassPresenter::unlockCompass);
         animation.startAnimation();
+        updateLocationTextViews();
     }
 
     private boolean isAnyCompassPresenterUnlocked() {
@@ -260,4 +295,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    public void startLocationPickActivity(View view) {
+        Intent i = new Intent(MainActivity.this, LocationPicker.class);
+        Location location = gpsCompassPresenter.getDestination();
+        if (location != null) {
+            i.putExtra("latitude", location.getLatitude());
+            i.putExtra("longitude", location.getLongitude());
+        }
+        startActivityForResult(i, PICK_LOCATION);
+
+    }
+
 }

@@ -9,10 +9,12 @@ public class CompassPresenter {
 
     private SensorsPresenter sensorsPresenter;
     protected Compass compass;
+    public float screenOrientationCorrection;
 
     public CompassPresenter(SensorsPresenter sensorsPresenter) {
         this.sensorsPresenter = sensorsPresenter;
         this.compass = new Compass();
+        screenOrientationCorrection = 0;
     }
 
     protected CompassPresenter(SensorsPresenter sensorsPresenter, Compass compass) {
@@ -20,29 +22,30 @@ public class CompassPresenter {
         this.compass = compass;
     }
 
-    public float getLastAzimuth(){
-        return compass.getLastAzimuth();
-    }
-    public float getCurrentAzimuth(){
-        return compass.getCurrentAzimuth();
+    public float getLastAzimuth() {
+        return compass.getLastAzimuth() + screenOrientationCorrection;
     }
 
-    public void lockCompass(){
+    public float getCurrentAzimuth() {
+        return compass.getCurrentAzimuth() + screenOrientationCorrection;
+    }
+
+    public void lockCompass() {
         compass.setLocked(true);
     }
 
-    public void unlockCompass(){
+    public void unlockCompass() {
         compass.setLocked(false);
     }
 
-    public boolean isCompassLocked(){
+    public boolean isCompassLocked() {
         return compass.isLocked();
     }
 
     public void updateCompass() {
-        if(!isCompassLocked()) {
+        if (!isCompassLocked()) {
             compass.setCurrentAzimuth(sensorsPresenter.calculateAzimuth());
-        }else throw new IllegalStateException(
+        } else throw new IllegalStateException(
                 "Compass is in locked mode, to change azimuth first unlock it");
     }
 
@@ -50,5 +53,13 @@ public class CompassPresenter {
     }
 
     public void onPause() {
+    }
+
+    public void setScreenLandscapeMode() {
+        screenOrientationCorrection = -90;
+    }
+
+    public void setScreenPortraitMode() {
+        screenOrientationCorrection = 0;
     }
 }

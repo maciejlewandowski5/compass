@@ -1,7 +1,7 @@
 package com.example.ngcompass.mainactivity.presenter;
 
 
-import com.example.ngcompass.mainactivity.model.Compass;
+
 import com.example.ngcompass.mainactivity.model.PointerCompass;
 import com.example.ngcompass.mainactivity.model.location.Location;
 
@@ -30,5 +30,6 @@ public class PointerCompassPresenter extends CompassPresenter {
         return ((PointerCompass)compass).getTargetLocation();
     }
 
+    public Location getCurrentLocation(){return ((PointerCompass)compass).getCurrentPosition();}
 
 }

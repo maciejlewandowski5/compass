@@ -130,6 +130,7 @@
         android:layout_marginBottom="@dimen/margin_very_huge"
         android:layout_marginEnd="@dimen/margin_huge"
         android:clickable="true"
+        android:onClick="startLocationPickActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/location_icon" />

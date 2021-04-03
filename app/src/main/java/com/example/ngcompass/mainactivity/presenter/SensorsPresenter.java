@@ -6,7 +6,7 @@ import com.example.ngcompass.mainactivity.model.RotationModel;
 
 public class SensorsPresenter {
 
-    private static final float ALPHA = 0.2f;
+    private static final float ALPHA = 0.5f;
 
     private float[] accelerometerReading;
     private float[] magnetometerReading;
@@ -21,8 +21,7 @@ public class SensorsPresenter {
 
     public float calculateAzimuth() {
         return -(float)
-                Math.toDegrees(rotationModel.orientationAngles[0])
-                + rotationModel.screenOrientationCorrection;
+                Math.toDegrees(rotationModel.orientationAngles[0]);
     }
 
     public void updateRotationModel() {
@@ -36,6 +35,7 @@ public class SensorsPresenter {
                 rotationModel.rotationMatrix,
                 rotationModel.orientationAngles);
     }
+
 
 
     private float[] applyLowPassFilter(float[] input, float[] output) {
