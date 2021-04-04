@@ -1,4 +1,4 @@
-package com.example.ngcompass.mainactivity.model.location;
+package com.example.ngcompass.mainactivity.mvp.presenter.dependency;
 
 import java.io.Serializable;
 

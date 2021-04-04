@@ -1,8 +1,8 @@
-package com.example.ngcompass.mainactivity.presenter;
+package com.example.ngcompass.mainactivity.mvp.presenter;
 
-import com.example.ngcompass.mainactivity.MainActivityView;
-import com.example.ngcompass.mainactivity.SensorManager;
-import com.example.ngcompass.mainactivity.model.location.Location;
+import com.example.ngcompass.mainactivity.mvp.MainActivityView;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorManager;
 
 
 public class PresenterImpBuilder {

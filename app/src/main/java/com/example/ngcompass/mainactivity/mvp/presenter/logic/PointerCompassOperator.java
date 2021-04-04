@@ -1,9 +1,9 @@
-package com.example.ngcompass.mainactivity.presenter.logic;
+package com.example.ngcompass.mainactivity.mvp.presenter.logic;
 
 
 
-import com.example.ngcompass.mainactivity.model.PointerCompassModel;
-import com.example.ngcompass.mainactivity.model.location.Location;
+import com.example.ngcompass.mainactivity.mvp.model.PointerCompassModel;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
 
 public class PointerCompassOperator extends CompassOperator {
 

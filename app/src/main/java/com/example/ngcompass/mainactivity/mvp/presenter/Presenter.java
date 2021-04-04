@@ -1,10 +1,10 @@
-package com.example.ngcompass.mainactivity.presenter;
+package com.example.ngcompass.mainactivity.mvp.presenter;
 
 
 
-import com.example.ngcompass.mainactivity.SensorEvent;
-import com.example.ngcompass.mainactivity.SurfaceRotation;
-import com.example.ngcompass.mainactivity.model.location.Location;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorEvent;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SurfaceRotation;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
 
 public interface Presenter {
 

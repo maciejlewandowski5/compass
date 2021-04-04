@@ -1,4 +1,6 @@
-package com.example.ngcompass.mainactivity.model.location;
+package com.example.ngcompass.mainactivity.androidimp;
+
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
 
 import java.io.Serializable;
 

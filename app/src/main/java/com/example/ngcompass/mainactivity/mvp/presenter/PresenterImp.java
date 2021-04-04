@@ -1,14 +1,14 @@
-package com.example.ngcompass.mainactivity.presenter;
+package com.example.ngcompass.mainactivity.mvp.presenter;
 
 
-import com.example.ngcompass.mainactivity.MainActivityView;
-import com.example.ngcompass.mainactivity.SensorEvent;
-import com.example.ngcompass.mainactivity.SensorManager;
-import com.example.ngcompass.mainactivity.SurfaceRotation;
-import com.example.ngcompass.mainactivity.model.location.Location;
-import com.example.ngcompass.mainactivity.presenter.logic.CompassOperator;
-import com.example.ngcompass.mainactivity.presenter.logic.PointerCompassOperator;
-import com.example.ngcompass.mainactivity.presenter.logic.RotationOrientationMatrixCalculator;
+import com.example.ngcompass.mainactivity.mvp.MainActivityView;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorEvent;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorManager;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SurfaceRotation;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
+import com.example.ngcompass.mainactivity.mvp.presenter.logic.CompassOperator;
+import com.example.ngcompass.mainactivity.mvp.presenter.logic.PointerCompassOperator;
+import com.example.ngcompass.mainactivity.mvp.presenter.logic.RotationOrientationMatrixCalculator;
 
 public class PresenterImp implements Presenter {
 
@@ -115,7 +115,7 @@ public class PresenterImp implements Presenter {
     }
 
     @Override
-    public void onSensorChanged(com.example.ngcompass.mainactivity.SensorEvent sensorEvent) {
+    public void onSensorChanged(SensorEvent sensorEvent) {
         updateAccMagReadings(sensorEvent);
         if (isAnyCompassPresenterUnlocked()) {
             regularCompassOperator.updateRotationModel();
@@ -136,7 +136,7 @@ public class PresenterImp implements Presenter {
         }
     }
 
-    public void updateAccMagReadings(com.example.ngcompass.mainactivity.SensorEvent sensorEvent) {
+    public void updateAccMagReadings(SensorEvent sensorEvent) {
         if (sensorEvent.getSensorType() == SensorEvent.SensorType.TYPE_ACCELEROMETER) {
             regularCompassOperator.updateAccelerometerReadings(sensorEvent.getValues().clone());
             gpsCompassOperator.updateAccelerometerReadings(sensorEvent.getValues().clone());

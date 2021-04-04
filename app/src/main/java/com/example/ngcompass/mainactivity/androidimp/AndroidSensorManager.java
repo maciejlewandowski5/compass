@@ -1,4 +1,6 @@
-package com.example.ngcompass.mainactivity;
+package com.example.ngcompass.mainactivity.androidimp;
+
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorManager;
 
 public class AndroidSensorManager implements SensorManager {
 

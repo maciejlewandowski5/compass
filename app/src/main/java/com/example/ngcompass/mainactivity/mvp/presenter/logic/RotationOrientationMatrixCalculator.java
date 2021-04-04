@@ -1,9 +1,9 @@
-package com.example.ngcompass.mainactivity.presenter.logic;
+package com.example.ngcompass.mainactivity.mvp.presenter.logic;
 
 
 
-import com.example.ngcompass.mainactivity.SensorManager;
-import com.example.ngcompass.mainactivity.model.RotationModel;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorManager;
+import com.example.ngcompass.mainactivity.mvp.model.RotationModel;
 
 public class RotationOrientationMatrixCalculator {
 

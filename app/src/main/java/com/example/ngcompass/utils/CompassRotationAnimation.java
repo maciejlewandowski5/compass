@@ -1,11 +1,9 @@
-package com.example.ngcompass.animations;
+package com.example.ngcompass.utils;
 
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-
-import com.example.ngcompass.mainactivity.presenter.logic.CompassOperator;
 
 public class CompassRotationAnimation {
 

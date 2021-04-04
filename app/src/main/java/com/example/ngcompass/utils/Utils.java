@@ -10,9 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.ngcompass.mainactivity.MainActivityConstants;
-import com.example.ngcompass.mainactivity.model.location.AndroidLocation;
-import com.example.ngcompass.mainactivity.model.location.Location;
+import com.example.ngcompass.mainactivity.androidimp.AndroidLocation;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
 
 import static android.content.Context.MODE_PRIVATE;
 

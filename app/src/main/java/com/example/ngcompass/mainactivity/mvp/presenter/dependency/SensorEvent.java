@@ -1,4 +1,4 @@
-package com.example.ngcompass.mainactivity;
+package com.example.ngcompass.mainactivity.mvp.presenter.dependency;
 
 public interface SensorEvent {
     public enum SensorType{

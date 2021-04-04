@@ -1,6 +1,8 @@
-package com.example.ngcompass.mainactivity;
+package com.example.ngcompass.mainactivity.androidimp;
 
 import android.hardware.Sensor;
+
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorEvent;
 
 
 public class AndroidSensorEvent implements SensorEvent {

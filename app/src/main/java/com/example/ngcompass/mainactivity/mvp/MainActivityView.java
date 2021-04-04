@@ -1,8 +1,4 @@
-package com.example.ngcompass.mainactivity;
-
-import android.widget.ImageView;
-
-import com.example.ngcompass.mainactivity.presenter.logic.CompassOperator;
+package com.example.ngcompass.mainactivity.mvp;
 
 public interface  MainActivityView {
 

@@ -1,4 +1,4 @@
-package com.example.ngcompass.mainactivity;
+package com.example.ngcompass.mainactivity.mvp;
 
 public class MainActivityConstants {
     public static final int MIN_TIME_LOCATION_UPDATE_MS = 0;

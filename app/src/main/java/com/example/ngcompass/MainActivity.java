@@ -20,18 +20,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.example.ngcompass.animations.CompassRotationAnimation;
-import com.example.ngcompass.mainactivity.AndroidSensorEvent;
-import com.example.ngcompass.mainactivity.MainActivityConstants;
-import com.example.ngcompass.mainactivity.MainActivityView;
-import com.example.ngcompass.mainactivity.AndroidSensorManager;
-import com.example.ngcompass.mainactivity.SurfaceRotation;
-import com.example.ngcompass.mainactivity.AndroidSurfaceRotation;
-import com.example.ngcompass.mainactivity.model.location.AndroidLocation;
-import com.example.ngcompass.mainactivity.model.location.Location;
-import com.example.ngcompass.mainactivity.presenter.Presenter;
+import com.example.ngcompass.utils.CompassRotationAnimation;
+import com.example.ngcompass.mainactivity.androidimp.AndroidSensorEvent;
+import com.example.ngcompass.mainactivity.mvp.MainActivityConstants;
+import com.example.ngcompass.mainactivity.mvp.MainActivityView;
+import com.example.ngcompass.mainactivity.androidimp.AndroidSensorManager;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SurfaceRotation;
+import com.example.ngcompass.mainactivity.androidimp.AndroidSurfaceRotation;
+import com.example.ngcompass.mainactivity.androidimp.AndroidLocation;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
+import com.example.ngcompass.mainactivity.mvp.presenter.Presenter;
 
-import com.example.ngcompass.mainactivity.presenter.PresenterImpBuilder;
+import com.example.ngcompass.mainactivity.mvp.presenter.PresenterImpBuilder;
 import com.example.ngcompass.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        com.example.ngcompass.mainactivity.SensorEvent sensorEvent = new AndroidSensorEvent(event);
+        com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorEvent sensorEvent = new AndroidSensorEvent(event);
         presenter.onSensorChanged(sensorEvent);
     }
 

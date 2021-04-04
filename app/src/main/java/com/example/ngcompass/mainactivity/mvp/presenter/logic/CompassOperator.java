@@ -1,6 +1,6 @@
-package com.example.ngcompass.mainactivity.presenter.logic;
+package com.example.ngcompass.mainactivity.mvp.presenter.logic;
 
-import com.example.ngcompass.mainactivity.model.CompassModel;
+import com.example.ngcompass.mainactivity.mvp.model.CompassModel;
 
 public class CompassOperator {
 

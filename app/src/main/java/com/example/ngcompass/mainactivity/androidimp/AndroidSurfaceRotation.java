@@ -1,6 +1,8 @@
-package com.example.ngcompass.mainactivity;
+package com.example.ngcompass.mainactivity.androidimp;
 
 import android.view.Surface;
+
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SurfaceRotation;
 
 public class AndroidSurfaceRotation implements SurfaceRotation {
     @Override

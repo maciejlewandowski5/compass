@@ -1,6 +1,6 @@
-package com.example.ngcompass.mainactivity.model;
+package com.example.ngcompass.mainactivity.mvp.model;
 
-import com.example.ngcompass.mainactivity.model.location.Location;
+import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
 
 public class PointerCompassModel extends CompassModel {
 

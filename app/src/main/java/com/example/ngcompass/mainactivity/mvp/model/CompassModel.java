@@ -1,4 +1,4 @@
-package com.example.ngcompass.mainactivity.model;
+package com.example.ngcompass.mainactivity.mvp.model;
 
 public class CompassModel {
 
