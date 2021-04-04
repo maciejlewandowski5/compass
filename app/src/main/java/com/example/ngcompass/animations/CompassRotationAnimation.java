@@ -5,7 +5,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
-import com.example.ngcompass.mainactivity.presenter.CompassPresenter;
+import com.example.ngcompass.mainactivity.presenter.logic.CompassOperator;
 
 public class CompassRotationAnimation {
 
@@ -14,13 +14,13 @@ public class CompassRotationAnimation {
     private onAnimationEnd onAnimationEnd;
     private ImageView compassFace;
 
-    public CompassRotationAnimation(CompassPresenter compassPresenter, ImageView compassFace) {
+    public CompassRotationAnimation(double lastAzimuth, double currentAzimuth, ImageView compassFace) {
 
         this.compassFace = compassFace;
 
         rotateAnimation = new RotateAnimation(
-                compassPresenter.getLastAzimuth(),
-                compassPresenter.getCurrentAzimuth(),
+                (float)lastAzimuth,
+                (float)currentAzimuth,
                 compassFace.getWidth() / 2f,
                 compassFace.getHeight() / 2f);
 

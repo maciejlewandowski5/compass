@@ -1,10 +1,11 @@
-package com.example.ngcompass.mainactivity.presenter;
+package com.example.ngcompass.mainactivity.presenter.logic;
 
-import android.hardware.SensorManager;
 
+
+import com.example.ngcompass.mainactivity.SensorManager;
 import com.example.ngcompass.mainactivity.model.RotationModel;
 
-public class SensorsPresenter {
+public class RotationOrientationMatrixCalculator {
 
     private static final float ALPHA = 0.5f;
 
@@ -13,10 +14,13 @@ public class SensorsPresenter {
 
     private RotationModel rotationModel;
 
-    public SensorsPresenter() {
+    private SensorManager sensorManager;
+
+    public RotationOrientationMatrixCalculator(SensorManager sensorManager) {
         rotationModel = new RotationModel();
         accelerometerReading = new float[3];
         magnetometerReading = new float[3];
+        this.sensorManager  = sensorManager;
     }
 
     public float calculateAzimuth() {
@@ -25,15 +29,16 @@ public class SensorsPresenter {
     }
 
     public void updateRotationModel() {
-        SensorManager.getRotationMatrix(
+        sensorManager.getRotationMatrix(
                 rotationModel.rotationMatrix,
                 null,
                 accelerometerReading,
                 magnetometerReading);
 
-        SensorManager.getOrientation(
+        sensorManager.getOrientationMatrix(
                 rotationModel.rotationMatrix,
                 rotationModel.orientationAngles);
+
     }
 
 
@@ -54,6 +59,13 @@ public class SensorsPresenter {
     public void updateMagnetometerReadings(float[] reading){
         magnetometerReading = applyLowPassFilter(reading, magnetometerReading);
     }
+
+    public void onResume() {
+    }
+
+    public void onPause() {
+    }
+
 
 
 }

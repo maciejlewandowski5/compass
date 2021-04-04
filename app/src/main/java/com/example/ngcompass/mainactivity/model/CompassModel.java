@@ -1,6 +1,6 @@
 package com.example.ngcompass.mainactivity.model;
 
-public class Compass {
+public class CompassModel {
 
     private float currentAzimuth;
     private float lastAzimuth;
@@ -8,7 +8,7 @@ public class Compass {
 
 
 
-    public Compass() {
+    public CompassModel() {
         this.currentAzimuth = 0;
         this.lastAzimuth = 0;
         this.locked = false;

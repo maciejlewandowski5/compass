@@ -2,14 +2,14 @@ package com.example.ngcompass.mainactivity.model;
 
 import com.example.ngcompass.mainactivity.model.location.Location;
 
-public class PointerCompass extends Compass{
+public class PointerCompassModel extends CompassModel {
 
 
     Location targetLocation;
     Location currentPosition;
 
 
-    public PointerCompass(Location targetLocation, Location currentPosition) {
+    public PointerCompassModel(Location targetLocation, Location currentPosition) {
         this.targetLocation = targetLocation;
         this.currentPosition = currentPosition;
     }

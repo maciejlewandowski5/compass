@@ -6,9 +6,15 @@ public class AndroidLocation implements Location, Serializable {
 
     android.location.Location mLocation;
 
-
     public AndroidLocation() {
+        this.mLocation = new android.location.Location("");
+    }
+
+    public AndroidLocation(double latitude, double longitude) {
         mLocation = new android.location.Location("");
+        mLocation.setLongitude(latitude);
+        mLocation.setLongitude(longitude);
+
     }
 
     public static AndroidLocation from(android.location.Location location){
