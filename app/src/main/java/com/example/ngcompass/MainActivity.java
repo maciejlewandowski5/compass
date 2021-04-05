@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.example.ngcompass.utils.CompassRotationAnimation;
 import com.example.ngcompass.mainactivity.androidimp.AndroidSensorEvent;
 import com.example.ngcompass.mainactivity.mvp.MainActivityConstants;
@@ -38,7 +40,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 
-
 public class MainActivity extends AppCompatActivity implements MainActivityView, SensorEventListener, LocationListener {
 
     private ImageView compassFace;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     private TextView latitudeTextView;
     private TextView distanceTextView;
     private LinearLayout coordinatesContainer;
+    private LinearLayout distanceContainer;
     private FloatingActionButton locationPickerButton;
 
     private LocationManager locationManager;
@@ -55,16 +57,43 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
 
     Presenter presenter;
 
+    private boolean locationAccess;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         initializeViews();
+        checkLocationPermission();
         buildPresenter();
         initializeServices();
         correctPresentersForScreenRotation();
 
+
+    }
+
+    private void checkLocationPermission() {
+        if (
+                ActivityCompat.checkSelfPermission(
+                        this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED
+                        &&
+                        ActivityCompat.checkSelfPermission(
+                                this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                                PackageManager.PERMISSION_GRANTED) {
+
+            locationAccess = true;
+
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MainActivityConstants.REQUEST_FINE_LOCATION_CODE);
+
+            locationAccess = false;
+        }
     }
 
     private void buildPresenter() {
@@ -95,9 +124,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     @Override
     protected void onResume() {
         presenter.onResume();
-        initializeLocationListener();
-        startLocationUpdates();
         registerSensorsListeners();
+        if (locationAccess) {
+            startLocationUpdates();
+        } else {
+            disablePointingToLocation();
+        }
         super.onResume();
     }
 
@@ -136,11 +168,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         Location destination = presenter.getDestination();
         Location currentLocation = presenter.getCurrentLocation();
 
-        Utils.saveLocationToBundle(outState, destination,
-                MainActivityConstants.BUNDLE_DESTINATION_SAVE_NAME);
+        if (currentLocation != null && destination != null) {
+            Utils.saveLocationToBundle(outState, destination,
+                    MainActivityConstants.BUNDLE_DESTINATION_SAVE_NAME);
 
-        Utils.saveLocationToBundle(outState, currentLocation,
-                MainActivityConstants.BUNDLE_CURRENT_LOCATION_SAVE_NAME);
+            Utils.saveLocationToBundle(outState, currentLocation,
+                    MainActivityConstants.BUNDLE_CURRENT_LOCATION_SAVE_NAME);
+        }
     }
 
 
@@ -162,24 +196,35 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         enablePointingToLocation();
     }
 
-    private void initializeLocationListener() {
-        pointingToLocationTitle.setText(getString(R.string.waiting_for_gsp_signal));
-
-    }
 
     private void disablePointingToLocation() {
-        locationPointer.setVisibility(View.INVISIBLE);
         coordinatesContainer.setVisibility(View.INVISIBLE);
-        pointingToLocationTitle.setText(R.string.enable_gps_to_navigate);
+        distanceContainer.setVisibility(View.INVISIBLE);
+        presenter.lockGPSCompass();
+        locationPointer.setVisibility(View.INVISIBLE);
+        locationPointer.setImageResource(R.drawable.compass_pointer_disabled);
         locationPickerButton.setClickable(false);
-        Utils.toastMessage(this, getString(R.string.please_enable_gps));
+        locationPickerButton.setEnabled(false);
+        if (locationAccess) {
+            pointingToLocationTitle.setText(R.string.enable_gps_to_navigate);
+            Utils.toastMessage(this, getString(R.string.please_enable_gps));
+        } else {
+            pointingToLocationTitle.setText(R.string.no_location_access);
+            Utils.toastMessage(this, getString(R.string.requre_permisssion));
+        }
     }
 
     private void enablePointingToLocation() {
-        locationPointer.setVisibility(View.VISIBLE);
         coordinatesContainer.setVisibility(View.VISIBLE);
         pointingToLocationTitle.setText(getString(R.string.pointing_to_location));
+        presenter.unlockGPSCompass();
+        distanceContainer.setVisibility(View.VISIBLE);
+        locationPointer.setVisibility(View.VISIBLE);
+        locationPointer.setImageResource(R.drawable.comapss_location_pointer);
+        locationPickerButton.setEnabled(true);
         locationPickerButton.setClickable(true);
+
+
     }
 
     private void updateLocationTextViews() {
@@ -219,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         coordinatesContainer = findViewById(R.id.gps_coordinates_container);
         locationPickerButton = findViewById(R.id.location_picker);
         distanceTextView = findViewById(R.id.distance);
+        distanceContainer = findViewById(R.id.distance_container);
     }
 
 
@@ -226,27 +272,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         presenter.updateDestination(Utils.readLocationFromStorage(this));
         presenter.updateCurrentPosition(getLastKnownLocation());
 
-        enablePointingToLocation();
         requestLocationUpdates();
+        enablePointingToLocation();
+
     }
 
+
+    @SuppressLint("MissingPermission") // Checked in checkLocationPermissionMethod()
     private void requestLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                        this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MainActivityConstants.REQUEST_FINE_LOCATION_CODE);
-
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MainActivityConstants.REQUEST_COARSE_LOCATION_CODE);
-        }
-
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 MainActivityConstants.MIN_TIME_LOCATION_UPDATE_MS,
@@ -254,28 +287,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
                 this);
     }
 
-    private Location getLastKnownLocation() {
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                        this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MainActivityConstants.REQUEST_FINE_LOCATION_CODE);
-
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MainActivityConstants.REQUEST_COARSE_LOCATION_CODE);
+        if (MainActivityConstants.REQUEST_FINE_LOCATION_CODE == requestCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationAccess = true;
+            } else {
+                locationAccess = false;
+            }
         }
+    }
+
+    private Location getLastKnownLocation() {
 
         List<String> providers = locationManager.getProviders(true);
         android.location.Location bestLocation = null;
         for (String provider : providers) {
-            android.location.Location l = locationManager.getLastKnownLocation(provider);
+            @SuppressLint("MissingPermission") // Checked in checkLocationPermissionMethod()
+                    android.location.Location l = locationManager.getLastKnownLocation(provider);
             if (l == null) {
                 continue;
             }
@@ -342,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
 
     @Override
     public void onProviderEnabled(@NonNull String provider) {
-        pointingToLocationTitle.setText(getString(R.string.waiting_for_gsp_signal));
+        enablePointingToLocation();
     }
 
     @Override

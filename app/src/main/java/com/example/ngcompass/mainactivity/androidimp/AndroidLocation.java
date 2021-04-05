@@ -2,6 +2,8 @@ package com.example.ngcompass.mainactivity.androidimp;
 
 import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 public class AndroidLocation implements Location, Serializable {
@@ -21,7 +23,9 @@ public class AndroidLocation implements Location, Serializable {
 
     public static AndroidLocation from(android.location.Location location){
         AndroidLocation result = new AndroidLocation();
-        result.mLocation = location;
+        if(location!=null) {
+            result.mLocation = location;
+        }
         return result;
     }
 
@@ -54,12 +58,14 @@ public class AndroidLocation implements Location, Serializable {
 
     @Override
     public float distanceTo(Location location) {
+        if(mLocation== null || location==null){return 0;}
         android.location.Location distanceArgumentLocation = prepareOriginalAndroidLocation(location);
         return mLocation.distanceTo(distanceArgumentLocation);
     }
 
     @Override
     public double getLatitude() {
+
         return mLocation.getLatitude();
     }
 

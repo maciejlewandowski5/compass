@@ -17,6 +17,7 @@ public class PresenterImp implements Presenter {
     private final PointerCompassOperator gpsCompassOperator;
     private final RotationOrientationMatrixCalculator rotationOrientationMatrixCalculator;
     private final MainActivityView mainActivityView;
+    private boolean disableGPSCompass;
 
     PresenterImp(
             Location destination,
@@ -34,7 +35,10 @@ public class PresenterImp implements Presenter {
 
         this.mainActivityView = mainActivityView;
 
+        disableGPSCompass = false;
+
     }
+
 
     public void setScreenOrientationCorrection(SurfaceRotation.ScreenRotation screenRotation) {
         int angle;
@@ -80,6 +84,7 @@ public class PresenterImp implements Presenter {
     public void updateDestination(Location destination) {
         gpsCompassOperator.updateDestination(destination);
     }
+
     @Override
     public void updateCurrentPosition(Location destination) {
         gpsCompassOperator.updateCurrentPosition(destination);
@@ -87,7 +92,7 @@ public class PresenterImp implements Presenter {
 
     @Override
     public float getDistance() {
-        return  getCurrentLocation().distanceTo(getDestination());
+            return getCurrentLocation().distanceTo(getDestination());
     }
 
     @Override
@@ -127,7 +132,7 @@ public class PresenterImp implements Presenter {
                     regularCompassOperator.getLastAzimuth(),
                     regularCompassOperator.getCurrentAzimuth());
         }
-        if (!gpsCompassOperator.isCompassLocked()) {
+        if (!gpsCompassOperator.isCompassLocked() && !disableGPSCompass) {
             gpsCompassOperator.updateCompass();
             mainActivityView.prepareAndStartGPSCompassAnimation(
                     gpsCompassOperator.getLastAzimuth(),

@@ -9,5 +9,8 @@
     <string name="enable_gps_to_navigate">Enable localisation, to navigate</string>
     <string name="waiting_for_gsp_signal">Waiting for GSP signal</string>
     <string name="title_activity_location_picker2">Map</string>
+    <string name="provide_permission">Please provide permission to navigate</string>
+    <string name="no_location_access">No location access</string>
+    <string name="requre_permisssion">Compass pointing to location require localization permission</string>
 
 </resources>
