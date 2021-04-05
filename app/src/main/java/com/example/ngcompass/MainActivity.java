@@ -3,9 +3,7 @@ package com.example.ngcompass;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +22,7 @@ import android.widget.TextView;
 
 import com.example.ngcompass.utils.CompassRotationAnimation;
 import com.example.ngcompass.mainactivity.androidimp.AndroidSensorEvent;
-import com.example.ngcompass.mainactivity.mvp.MainActivityConstants;
+import com.example.ngcompass.utils.MainActivityConstants;
 import com.example.ngcompass.mainactivity.mvp.MainActivityView;
 import com.example.ngcompass.mainactivity.androidimp.AndroidSensorManager;
 import com.example.ngcompass.mainactivity.mvp.presenter.dependency.SurfaceRotation;
@@ -34,6 +32,7 @@ import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
 import com.example.ngcompass.mainactivity.mvp.presenter.Presenter;
 
 import com.example.ngcompass.mainactivity.mvp.presenter.PresenterImpBuilder;
+import com.example.ngcompass.utils.PermissionHelper;
 import com.example.ngcompass.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -52,12 +51,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     private LinearLayout distanceContainer;
     private FloatingActionButton locationPickerButton;
 
+    private PermissionHelper permissionHelper;
+
     private LocationManager locationManager;
     private SensorManager sensorManager;
 
-    Presenter presenter;
-
-    private boolean locationAccess;
+    private Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,25 +74,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
     private void checkLocationPermission() {
-        if (
-                ActivityCompat.checkSelfPermission(
-                        this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED
-                        &&
-                        ActivityCompat.checkSelfPermission(
-                                this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                                PackageManager.PERMISSION_GRANTED) {
-
-            locationAccess = true;
-
-        } else {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MainActivityConstants.REQUEST_FINE_LOCATION_CODE);
-
-            locationAccess = false;
-        }
+        permissionHelper = new PermissionHelper();
+        permissionHelper.checkLocationPermission(this);
     }
 
     private void buildPresenter() {
@@ -125,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     protected void onResume() {
         presenter.onResume();
         registerSensorsListeners();
-        if (locationAccess) {
+        if (permissionHelper.isLocationAccess()) {
             startLocationUpdates();
         } else {
             disablePointingToLocation();
@@ -205,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         locationPointer.setImageResource(R.drawable.compass_pointer_disabled);
         locationPickerButton.setClickable(false);
         locationPickerButton.setEnabled(false);
-        if (locationAccess) {
+        if (permissionHelper.isLocationAccess()) {
             pointingToLocationTitle.setText(R.string.enable_gps_to_navigate);
             Utils.toastMessage(this, getString(R.string.please_enable_gps));
         } else {
@@ -278,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     }
 
 
-    @SuppressLint("MissingPermission") // Checked in checkLocationPermissionMethod()
+    @SuppressLint("MissingPermission") //  // Checked by PermisssionHelper
     private void requestLocationUpdates() {
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
@@ -292,12 +274,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (MainActivityConstants.REQUEST_FINE_LOCATION_CODE == requestCode) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                locationAccess = true;
-            } else {
-                locationAccess = false;
-            }
+        if (MainActivityConstants.REQUEST_FINE_COARSE_LOCATION_CODE == requestCode) {
+            permissionHelper.setLocationAccess(
+                    grantResults.length > 0
+                            &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED);
         }
     }
 
@@ -306,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         List<String> providers = locationManager.getProviders(true);
         android.location.Location bestLocation = null;
         for (String provider : providers) {
-            @SuppressLint("MissingPermission") // Checked in checkLocationPermissionMethod()
+            @SuppressLint("MissingPermission") // Checked by PermisssionHelper
                     android.location.Location l = locationManager.getLastKnownLocation(provider);
             if (l == null) {
                 continue;
