@@ -43,7 +43,7 @@ public class RotationOrientationMatrixCalculator {
 
 
 
-    private float[] applyLowPassFilter(float[] input, float[] output) {
+    public float[] applyLowPassFilter(float[] input, float[] output) {
         if (output == null) return input;
 
         for (int i = 0; i < input.length; i++) {

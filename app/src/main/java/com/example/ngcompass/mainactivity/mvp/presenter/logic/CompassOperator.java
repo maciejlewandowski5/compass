@@ -71,7 +71,4 @@ public class CompassOperator {
         screenOrientationCorrection = correctionAngle;
     }
 
-    public void setScreenPortraitMode() {
-        screenOrientationCorrection = 0;
-    }
 }

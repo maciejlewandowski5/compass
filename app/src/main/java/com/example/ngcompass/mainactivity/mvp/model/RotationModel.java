@@ -11,11 +11,6 @@ public class RotationModel {
     public RotationModel() {
         rotationMatrix = new float[9];
         orientationAngles = new float[3];
-
     }
-
-
-
-
 
 }
