@@ -12,22 +12,19 @@ import androidx.annotation.Nullable;
 
 import com.example.ngcompass.mainactivity.androidimp.AndroidLocation;
 import com.example.ngcompass.mainactivity.mvp.presenter.dependency.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class Utils {
 
     public static final String SHARED_PREF_LOCATION_NAME = "destination";
-    public static final String SHARED_PREF_LOCATION_LATITUDE_PART = "latitude";
-    public static final String SHARED_PREF_LOCATION_LONGITUDE_PART = "longitude";
+    public static final String SP_LATITUDE = "latitude";
+    public static final String SP_LONGITUDE = "longitude";
 
-    public static int pxToDp(int px) {
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
-    }
+    private static final String LAT_SUFFIX = "Lat";
+    private static final String LON_SUFFIX = "Lon";
 
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
 
     public static void toastMessage(Context context, String message) {
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
@@ -51,14 +48,14 @@ public class Utils {
     }
 
     public static void saveLocationToBundle(Bundle outState, Location destination, String saveName) {
-        outState.putDouble(saveName + "Lat", destination.getLatitude());
-        outState.putDouble(saveName + "Lon", destination.getLongitude());
+        outState.putDouble(saveName + LAT_SUFFIX, destination.getLatitude());
+        outState.putDouble(saveName + LON_SUFFIX, destination.getLongitude());
     }
 
     public static Location readLocationFromBundle(Bundle savedState, String saveName) {
         Location destination = new AndroidLocation();
-        destination.setLatitude(savedState.getDouble(saveName + "Lat"));
-        destination.setLongitude(savedState.getDouble(saveName + "Lon"));
+        destination.setLatitude(savedState.getDouble(saveName + LAT_SUFFIX));
+        destination.setLongitude(savedState.getDouble(saveName + LON_SUFFIX));
         return destination;
     }
 
@@ -70,26 +67,68 @@ public class Utils {
         Location location = new AndroidLocation();
 
         location.setLatitude(Double.longBitsToDouble(sp.getLong(
-                SHARED_PREF_LOCATION_LATITUDE_PART,
+                SP_LATITUDE,
                 Double.doubleToLongBits(0))));
 
         location.setLongitude(Double.longBitsToDouble(sp.getLong(
-                SHARED_PREF_LOCATION_LONGITUDE_PART,
+                SP_LONGITUDE,
                 Double.doubleToLongBits(0))));
 
         return location;
+    }
+
+    public static void saveLatLangToStorage(Context context, LatLng position) {
+        SharedPreferences sp =
+                context.getSharedPreferences(SHARED_PREF_LOCATION_NAME, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor e = sp.edit();
+
+        e.putLong(
+                SP_LATITUDE,
+                java.lang.Double.doubleToRawLongBits(position.latitude));
+
+        e.putLong(
+                SP_LONGITUDE,
+                java.lang.Double.doubleToRawLongBits(position.longitude));
+
+        e.apply();
+
     }
 
     @Nullable
     public static Location readLocationFromIntent(Intent data) {
         if (data != null) {
             Location location = new AndroidLocation();
-            location.setLatitude(data.getDoubleExtra("latitude", 0));
-            location.setLongitude(data.getDoubleExtra("longitude", 0));
+
+            location.setLatitude(data.getDoubleExtra(
+                    SP_LATITUDE,
+                    0));
+
+            location.setLongitude(data.getDoubleExtra(
+                    SP_LONGITUDE,
+                    0));
+
             return location;
-        }else {
+        } else {
             return null;
         }
     }
+
+    public static void putLocationToIntent(Intent i, Location location) {
+        i.putExtra(SP_LATITUDE, location.getLatitude());
+        i.putExtra(SP_LONGITUDE, location.getLongitude());
+    }
+
+    public static LatLng getLatLangFromIntent(Intent intent) {
+        double longitude = intent.getDoubleExtra(SP_LONGITUDE, 0.0);
+        double latitude = intent.getDoubleExtra(SP_LATITUDE, 0.0);
+        return new LatLng(latitude, longitude);
+    }
+
+    public static void putLatLangToIntent(Intent i, LatLng location) {
+        i.putExtra(SP_LATITUDE, location.latitude);
+        i.putExtra(SP_LONGITUDE, location.longitude);
+    }
+
 
 }

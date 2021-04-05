@@ -327,12 +327,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         Intent i = new Intent(MainActivity.this, LocationPicker.class);
         Location location = presenter.getDestination();
         if (location != null) {
-            i.putExtra("latitude", location.getLatitude());
-            i.putExtra("longitude", location.getLongitude());
+            Utils.putLocationToIntent(i, location);
         }
         startActivityForResult(i, MainActivityConstants.PICK_LOCATION);
 
     }
+
 
     @Override
     public void onLocationChanged(@NonNull android.location.Location location) {
