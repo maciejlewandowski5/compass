@@ -23,5 +23,6 @@
         android:onClick="locationPickConfirmationClicked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/location_icon" />
+        app:srcCompat="@drawable/location_icon"
+        android:backgroundTint="@color/complementary_variant"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

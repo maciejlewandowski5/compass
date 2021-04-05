@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -140,7 +141,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorEvent sensorEvent = new AndroidSensorEvent(event);
+        com.example.ngcompass.mainactivity.mvp.presenter.dependency.SensorEvent sensorEvent =
+                new AndroidSensorEvent(event);
         presenter.onSensorChanged(sensorEvent);
     }
 
@@ -205,8 +207,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView,
         locationPointer.setImageResource(R.drawable.comapss_location_pointer);
         locationPickerButton.setEnabled(true);
         locationPickerButton.setClickable(true);
-
-
     }
 
     private void updateLocationTextViews() {

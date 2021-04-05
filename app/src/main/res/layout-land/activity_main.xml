@@ -29,7 +29,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/gps_coordinates_container"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back_comapss_face" />
+        app:srcCompat="@drawable/back_comapss_face"
+        android:contentDescription="@string/compass_scale" />
 
     <ImageView
         android:id="@+id/location_pointer"
@@ -40,7 +41,8 @@
         app:layout_constraintEnd_toEndOf="@+id/compass_back_face"
         app:layout_constraintStart_toStartOf="@+id/compass_back_face"
         app:layout_constraintTop_toTopOf="@+id/compass_back_face"
-        app:srcCompat="@drawable/comapss_location_pointer" />
+        app:srcCompat="@drawable/comapss_location_pointer"
+        android:contentDescription="@string/compass_location_arrow" />
 
     <ImageView
         android:id="@+id/compass_front_face"
@@ -50,7 +52,8 @@
         app:layout_constraintEnd_toEndOf="@+id/compass_back_face"
         app:layout_constraintStart_toStartOf="@+id/compass_back_face"
         app:layout_constraintTop_toTopOf="@+id/compass_back_face"
-        app:srcCompat="@drawable/front_compass_face" />
+        app:srcCompat="@drawable/front_compass_face"
+        android:contentDescription="@string/compass_face" />
 
     <ImageView
         android:id="@+id/compass_pin"
@@ -60,7 +63,8 @@
         app:layout_constraintEnd_toEndOf="@+id/compass_front_face"
         app:layout_constraintStart_toStartOf="@+id/compass_front_face"
         app:layout_constraintTop_toTopOf="@+id/compass_front_face"
-        app:srcCompat="@drawable/pin" />
+        app:srcCompat="@drawable/pin"
+        android:contentDescription="@string/compass_pin" />
 
     <LinearLayout
         android:id="@+id/distance_container"
@@ -79,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_weight="1"
-            android:text="distance" />
+            android:text="@string/distance" />
 
         <TextView
             android:id="@+id/distance"
@@ -157,7 +161,10 @@
         android:onClick="startLocationPickActivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/location_icon" />
+        app:srcCompat="@drawable/location_icon"
+        android:backgroundTint="@color/complementary_variant"
+        android:contentDescription="@string/pick_location"
+        android:focusable="true" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

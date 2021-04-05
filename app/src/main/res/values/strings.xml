@@ -12,5 +12,12 @@
     <string name="provide_permission">Please provide permission to navigate</string>
     <string name="no_location_access">No location access</string>
     <string name="requre_permisssion">Compass pointing to location require localization permission</string>
+    <string name="compass_scale">compass scale</string>
+    <string name="compass_location_arrow">compass location arrow</string>
+    <string name="compass_face">compass face</string>
+    <string name="compass_pin">compass pin</string>
+    <string name="distance">distance</string>
+    <string name="pick_location">pick location</string>
+
 
 </resources>
